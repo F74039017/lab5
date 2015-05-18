@@ -77,6 +77,7 @@ const HugeInt HugeInt::operator+ (const HugeInt & x)
 		lonlen++, over=true;
 	sum[0] %= 10;
 	HugeInt result;
+	result.sign = sign;
 	result.len = lonlen;
 	delete [] result.number; // reallocate
 	result.number = new int[lonlen];
@@ -155,6 +156,8 @@ const HugeInt HugeInt::operator- (const HugeInt & x)
 
 ostream & operator<< (ostream &out, const HugeInt &num)
 {
+	if(!num.sign)
+		out << "-";
 	for(int i=0; i<num.len; i++)
 		out << num.number[i];
 	return out;
