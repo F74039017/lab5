@@ -41,6 +41,13 @@ HugeInt::~HugeInt()
 
 const HugeInt HugeInt::operator+ (const HugeInt & x)
 {
+	if(sign!=x.sign)
+	{
+		HugeInt temp = x;
+		temp.sign = !temp.sign;
+		return *this-temp;
+	}
+
 	int lonlen = (len>x.len)? len: x.len;
 	int ext[lonlen];
 	memset(ext, 0, sizeof(ext));
@@ -96,6 +103,13 @@ const HugeInt HugeInt::operator+ (const HugeInt & x)
 
 const HugeInt HugeInt::operator- (const HugeInt & x)
 {
+	if(sign!=x.sign)
+	{
+		HugeInt temp = x;
+		temp.sign = !temp.sign;
+		return *this+temp;
+	}
+
 	int lonlen = (len>x.len)? len: x.len;
 	int ext[lonlen];
 	memset(ext, 0, sizeof(ext));
@@ -145,6 +159,8 @@ const HugeInt HugeInt::operator- (const HugeInt & x)
 		}
 
 	HugeInt result;
+	if(!sign)
+		nsign = !nsign;
 	result.sign = nsign;
 	result.len = lonlen-cnt;
 	result.number = new int[result.len];
@@ -156,10 +172,12 @@ const HugeInt HugeInt::operator- (const HugeInt & x)
 
 ostream & operator<< (ostream &out, const HugeInt &num)
 {
-	if(!num.sign)
+	if(!num.sign && num.len)
 		out << "-";
 	for(int i=0; i<num.len; i++)
 		out << num.number[i];
+	if(num.len==0)
+		out << "0";
 	return out;
 }
 
